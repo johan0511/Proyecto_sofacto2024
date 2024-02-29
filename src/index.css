@@ -1,0 +1,393 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #ffffff00;
+}
+
+.fondo {
+  display: flex;
+  left: 0px;
+  color: black;
+  position: fixed;
+  margin-top: 10px;
+  height: 90vh;
+  margin-top: 10%;
+  width: 200vh;
+  backdrop-filter: blur(5px);
+  -webkit-border-radius: 0px 15px 0px 15px;
+  -moz-border-radius: 0px 15px 0px 15px;
+  -ms-border-radius: 0px 15px 0px 15px;
+  -o-border-radius: 0px 15px 0px 15px;
+}
+
+form {
+  position: relative;
+  border: #000;
+  text-align: center;
+  text-decoration: none;
+  bottom: -180px;
+  left: 37%;
+  border-color: #03588c;
+  padding: 5%;
+  border: 1px solid #0000;
+  background-color: #ff000000;
+  -webkit-border-radius: 0px 15px 0px 15px;
+  -moz-border-radius: 0px 15px 0px 15px;
+  -ms-border-radius: 0px 15px 0px 15px;
+  -o-border-radius: 0px 15px 0px 15px;
+}
+
+.info1 {
+  text-align: center;
+  position: absolute;
+  bottom: 25px;
+  left: 600px;
+}
+
+.respuesta {
+  padding: 0px;
+  position: relative;
+  margin: 15px;
+  position: relative;
+  right: 15px;
+}
+
+.respuesta1 {
+  padding: 0px;
+  position: relative;
+  margin: 10px;
+  position: relative;
+  right: 15px;
+}
+
+.buscar {
+  width: 500px;
+  border-color: #0c82c7 solid 1px;
+  position: fixed;
+  bottom: 330px;
+  left: 180px;
+  -webkit-border-radius: ;
+  -moz-border-radius: ;
+  -ms-border-radius: ;
+  -o-border-radius: ;
+}
+
+.bg-default-100 {
+  --tw-bg-opacity: 1;
+  color: #000000;
+  border: #003554;
+  /* background-color: hsl(0, 0%, 0%); */
+}
+.form-inicio1 {
+  background-color: #ffffff;
+  padding: 20px;
+  position: relative;
+  height: 630px;
+  bottom: 50%;
+  border-radius: 0px 80px important!;
+  box-shadow: 0 0 10px rgb(0, 0, 0);
+  width: 350px;
+  -webkit-border-radius: 0px 80px important!;
+  -moz-border-radius: 0px 80px important!;
+  -ms-border-radius: 0px 80px important!;
+  -o-border-radius: 0px 80px important!;
+}
+
+h1 {
+  font-size: 20px;
+}
+
+.form-inicio {
+  background-color: #ffffff;
+  padding: 20px;
+  position: relative;
+  height: 500px;
+  bottom: 0%;
+  box-shadow: 0 0 10px rgb(0, 0, 0);
+  width: 350px;
+}
+
+.fondo_info {
+  background-color: #ffffff;
+  padding: 20px;
+  position: relative;
+  top: -50px;
+  height: 300px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgb(0, 0, 0);
+  width: 300px;
+}
+
+.registro {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+a {
+  color: #3498db;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-bottom: 0px;
+}
+
+.boton_link {
+  background-color: #3498db;
+  color: #ffffff;
+  height: 40px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.boton_link:hover {
+  background-color: #2980b9;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+header {
+  display: flex;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: fixed;
+  color: rgb(0, 0, 0);
+  background: #fdfffc;
+  cursor: pointer;
+  border-bottom: 1.4px solid #03588c;
+  box-shadow: 0px 0px 15px #5c5c5c;
+}
+
+.nav {
+  position: fixed;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: fixed;
+  color: #000;
+  background: #005f73;
+  border-bottom: 1.4px solid #0fa3b1;
+  box-shadow: 0px 0px 15px #5c5c5c;
+}
+
+.navlg {
+  width: 100px;
+  padding: 2px;
+  padding-left: 14px;
+}
+
+.navh,
+h2 {
+  font-size: 55px;
+  display: flex;
+  position: fixed;
+  left: 39%;
+  text-align: center;
+  text-shadow: 1px 4px #003554;
+  color: #fdfffc;
+}
+
+/* cuerpo Inventario */
+
+.qrp {
+  position: relative;
+  left: 50%;
+  top: 900px;
+  background: #ffffff;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: auto;
+  max-width: 1800px;
+}
+.BtnN {
+  margin: 15px;
+  left: 18%;
+}
+
+.BtnP {
+  margin: 10px;
+  left: 75%;
+}
+
+.Avat {
+  display: flex;
+  position: fixed;
+  margin: 15px 2px;
+  right: 5%;
+}
+.tAb {
+  bottom: 220px;
+  display: fixed;
+  width: 1230px;
+  height: auto;
+  padding: 10px;
+  border-radius: 50px 0px 50px 0;
+  border: 1px solid #000;
+  margin: 1px auto;
+}
+
+.App form {
+  padding: 0;
+}
+
+ul {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  color: black;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: black;
+  text-align: left;
+  padding: 10px;
+  margin: 5px;
+  margin-right: 40px;
+  position: fixed;
+  left: 77%;
+  font-size: 20px;
+}
+
+li {
+  list-style: none;
+  padding: 15px;
+  color: black;
+  text-align: center;
+}
+
+.fondo {
+  position: fixed;
+  top: 9%;
+  color: rgb(0, 0, 0);
+  left: 50%;
+  transform: translate(-50%, -30%);
+  width: 100%;
+  height: 200px;
+  max-width: 1350px;
+}
+
+.cuerp {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 3px;
+  max-width: 1350px;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+}
+
+.info {
+  position: fixed;
+  left: 32%;
+  margin: 15px;
+  color: black;
+  font-size: 20px;
+}
+
+.text-inherit {
+  color: #000000;
+}
+
+.logo {
+  position: relative;
+  display: flex;
+  left: 40px;
+  color: black;
+  cursor: pointer;
+}
+
+.contp {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  box-shadow: 1px 2px 2px #41658a;
+  background: #7fa37b;
+  border: 6px solid transparent;
+  border-radius: 18px 0px 19px 0px;
+  position: relative;
+  top: 155px;
+  width: 50%;
+  left: 6%;
+  max-width: 600px;
+  padding: 6px;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.contp:hover {
+  transform: scale(1.1);
+  background-color: #03588c;
+  color: #000;
+  font-weight: 500;
+}
+
+.link {
+  margin: 20px;
+}
+
+.initl {
+  position: absolute;
+  top: 150px;
+  right: 10%;
+  color: black;
+  width: 320px;
+}
+
+footer {
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+  overflow: hidden;
+  color: black;
+  position: fixed;
+  background: #005f73;
+  border-bottom: 1.4px solid #03588c;
+  box-shadow: 0px 0px 15px #5c5c5c;
+  text-align: center;
+  bottom: 0%;
+  height: 16%;
+}
+
+.contacto img {
+  bottom: -30px;
+  width: 20px;
+  margin: 10px;
+  display: flex;
+}
+
+button {
+  padding: 5px;
+  /* border: 1px solid #000; */
+  border-radius: 20px;
+  color: #005f73;
+  background-color: #ffffff;
+}
