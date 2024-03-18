@@ -1,119 +1,152 @@
-import "../index.css";
-import "../main";
-import React from "react";
-import { Button } from "@nextui-org/react";
 import { Link } from "react-router-dom";
-import { Select, SelectItem } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
-import { EyeFilledIcon } from "../../components/EyeFilledIcon";
-import { opcion } from "../../components/datos";
-import { documents } from "../../components/documentos";
-import { EyeSlashFilledIcon } from "../../components/EyeSlashFilledIcon";
+import { useState } from "react";
+import Swal from "sweetalert2";
 
 export const RegistroUsuario = () => {
-  const [isVisible, setIsVisible] = React.useState(false);
+  const [formData, setFormData] = useState({
+    IdTipo_identificacion: "",
+    IdUsuario: "",
+    Correo: "",
+    Contrasena: "",
+    Verificar_Contrasena: "",
+    IdCargo: "",
+  });
 
-  const toggleVisibility = () => setIsVisible(!isVisible);
+  const handleInputChange = (e, fieldName) => {
+    const { value } = e.target;
+    setFormData({
+      ...formData,
+      [fieldName]: value,
+    });
+  };
+
+  const handleRegistro = async () => {
+    // Verificar que todos los campos estén llenos
+    for (const key in formData) {
+      if (formData[key] === "") {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Por favor complete todos los campos",
+        });
+        return;
+      }
+    }
+
+    // Verificar que las contraseñas coincidan
+    if (formData.Contrasena !== formData.Verificar_Contrasena) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Las contraseñas no coinciden. Por favor verifique.",
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/usuario/agregar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "Usuario creado correctamente",
+        });
+        setFormData({
+          IdTipo_identificacion: "",
+          IdUsuario: "",
+          Correo: "",
+          Contrasena: "",
+          Verificar_Contrasena: "",
+          IdCargo: "",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Error al crear el usuario",
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div className="fondo">
-      <form className="form-inicio1" id="login-form">
-        <div className="registro">
+      <div className="registro">
+        <form className="form-inicio1" id="login-form">
           <h1>Registrarse</h1>
-          <Select
+          <Input
             isRequired
             label="Tipo de documento"
-            placeholder="Seleccione"
-            defaultSelectedKeys={["OtroDocumento"]}
+            placeholder="Escriba su tipo de documento"
+            value={formData.IdTipo_identificacion}
             className="respuesta1"
-          >
-            {documents.map((doc) => (
-              <SelectItem key={doc.value} value={doc.value}>
-                {doc.label}
-              </SelectItem>
-            ))}
-          </Select>
+            onChange={(e) => handleInputChange(e, "IdTipo_identificacion")}
+          />
           <Input
             isRequired
             type="name"
-            label="Ingresa tus nombres completos "
-            defaultValue="Juan Alberto"
+            label="Ingresa tu numero de documento "
+            value={formData.IdUsuario}
             className="respuesta1"
+            onChange={(e) => handleInputChange(e, "IdUsuario")}
           />
           <Input
             isRequired
             type="email"
             label="Email"
-            defaultValue="junior@nextui.org"
+            value={formData.Correo}
             className="respuesta1"
+            onChange={(e) => handleInputChange(e, "Correo")}
           />
           <Input
+            isRequired
             label="Contraseña"
-            variant="contraseña"
+            variant="password"
             placeholder="Ingrese su contraseña"
-            defaultValue="*********"
-            endContent={
-              <button
-                className="focus:outline-none"
-                type="button"
-                onClick={toggleVisibility}
-              >
-                {isVisible ? (
-                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                ) : (
-                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                )}
-              </button>
-            }
-            type={isVisible ? "text" : "password"}
+            value={formData.Contrasena}
+            type="password"
             className="respuesta1"
+            onChange={(e) => handleInputChange(e, "Contrasena")}
           />
           <Input
-            label="Contraseña"
-            variant="contraseña"
-            placeholder="Ingrese su contraseña"
-            defaultValue="*********"
-            endContent={
-              <button
-                className="focus:outline-none"
-                type="button"
-                onClick={toggleVisibility}
-              >
-                {isVisible ? (
-                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                ) : (
-                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                )}
-              </button>
-            }
-            type={isVisible ? "text" : "password"}
+            isRequired
+            label="Confirme su contraseña"
+            variant="password"
+            placeholder="Confirme su contraseña"
+            value={formData.Verificar_Contrasena}
+            type="password"
             className="respuesta1"
+            onChange={(e) => handleInputChange(e, "Verificar_Contrasena")}
           />
-          <Select
+          <Input
             isRequired
             label="Seleccione su cargo"
             placeholder="Seleccione su cargo"
-            defaultSelectedKeys={["Administrador"]}
+            value={formData.IdCargo}
             className="respuesta1"
-          >
-            {opcion.map((animal) => (
-              <SelectItem key={animal.value} value={animal.value}>
-                {animal.label}
-              </SelectItem>
-            ))}
-          </Select>
-          <Link to="/">
-          <Button color="primary" variant="ghost">
+            onChange={(e) => handleInputChange(e, "IdCargo")}
+          />
+          <Button color="primary" variant="ghost" onClick={handleRegistro}>
             Registrarse
           </Button>
-          </Link>
-          O
+          <br /> O <br />
           <Link to="/">
             <Button color="danger" variant="bordered">
               Volver al inicio
             </Button>
           </Link>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

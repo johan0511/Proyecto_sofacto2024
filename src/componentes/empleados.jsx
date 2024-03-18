@@ -1,40 +1,48 @@
-import logoempresa from "../img/logoempresa.png";
+import React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@nextui-org/button";
-import Table from "../../components/Empleados";
+import logoempresa from "../img/logoempresa.png";
+import Avatar from "../../components/Avatar";
+import TabEmpleados from "../../components/TablaProductos/TabEmpleados";
 
-import Avat from "../../components/Avatar";
-
-const empleados = () => {
+const Empleados = () => {
   return (
     <>
       <div className="nav">
         <img src={logoempresa} alt="Logo" className="navlg" />
-        <Button className="BtnN" color="success" variant="shadow">
-          Factura
-        </Button>
-        <Button className="BtnN" color="success" variant="shadow">
-          Inventario
-        </Button>
-        <Button className="BtnN" color="success" variant="shadow">
-          Registro Ventas
-        </Button>
-        <Button className="BtnN" color="success" variant="shadow">
-          Informe Ventas
-        </Button>
+        <Link to="/factura">
+          <Button className="BtnN" color="success" variant="shadow">
+            Factura
+          </Button>
+        </Link>
+        <Link to="/inventario">
+          <Button className="BtnN" color="success" variant="shadow">
+            Inventario
+          </Button>
+        </Link>
+        <Link to="/">
+          <Button className="BtnN" color="success" variant="shadow">
+            Registro Ventas
+          </Button>
+        </Link>
+        <Link to="/">
+          <Button className="BtnN" color="success" variant="shadow">
+            Informe Ventas
+          </Button>
+        </Link>
         <div className="Avat">
-          <Avat />
+          <Avatar />
         </div>
       </div>
-      <div className="qrp">
-        <Button className="BtnP" color="primary" variant="shadow">
-          Agregar empleado
-        </Button>
-        <div className="tAb">
-          <Table />
-        </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <div className="tAb">
+        <TabEmpleados />
       </div>
     </>
   );
 };
 
-export default empleados;
+export default Empleados;

@@ -1,10 +1,14 @@
 export const documents = [
   {
-    label: "C.C",
-    value: "cedula_cidadania",
+    label: "Activo",
+    value: "Activo",
   },
   {
-    label: "C.E",
-    value: "cedula_extranjeria",
+    label: "Inactivo",
+    value: "Inactivo",
+  },
+  {
+    label: "Vacaciones",
+    value: "Vacaciones",
   },
 ];

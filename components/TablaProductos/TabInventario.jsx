@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Button } from "@nextui-org/react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -37,7 +38,7 @@ class App extends Component {
   };
 
   peticionPost = async () => {
-    delete this.state.form.id;
+    delete this.state.form.IdProducto;
     await axios
       .post("http://localhost:3000/crear", this.state.form)
       .then((response) => {
@@ -50,17 +51,28 @@ class App extends Component {
   };
 
   peticionPut = () => {
-    axios.put(url + this.state.form.id, this.state.form).then((response) => {
-      this.modalInsertar();
-      this.peticionGet();
-    });
+    const { IdProducto, ...rest } = this.state.form;
+    axios
+      .put(`http://localhost:3000/actualizar/${IdProducto}`, rest)
+      .then((response) => {
+        this.modalInsertar();
+        this.peticionGet(); // Fetch updated data after the successful update
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
 
   peticionDelete = () => {
-    axios.delete(url + this.state.form.id).then((response) => {
-      this.setState({ modalEliminar: false });
-      this.peticionGet();
-    });
+    axios
+      .delete("http://localhost:3000/eliminar/" + this.state.form.IdProducto)
+      .then((response) => {
+        this.setState({ modalEliminar: false });
+        this.peticionGet();
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
 
   modalInsertar = () => {
@@ -71,19 +83,8 @@ class App extends Component {
     this.setState({
       tipoModal: "actualizar",
       form: {
-        IdProducto: Productos.id,
-        Nombre: Productos.Nombre,
-        Nombre_categoria_FK: Productos.Nombre_categoria_FK,
-        Proveedor: Productos.Proveedor,
-        Descripcion: Productos.Descripcion,
-        Fecha: Productos.Fecha,
-        Estado: Productos.Estado,
-        Precio: Productos.Precio,
-
-        // id: Producto.id,
-        // nombre: empresa.nombre,
-        // pais: empresa.pais,
-        // capital_bursatil: empresa.capital_bursatil,
+        ...Productos, // Copy all fields from Productos
+        Fecha: Productos.Fecha.substring(0, 10), // Ensure Date format is YYYY-MM-DD
       },
     });
   };
@@ -104,7 +105,7 @@ class App extends Component {
     this.setState({
       form: {
         ...this.state.form,
-        tipoModal: "insertar", // Asegurar que el tipoModal se establezca correctamente
+        tipoModal: "insertar", // Ensure tipoModal is set correctly
       },
     });
   }
@@ -114,7 +115,7 @@ class App extends Component {
     return (
       <div className="App">
         <br />
-        <button
+        <Button
           className="btn btn-success"
           onClick={() => {
             this.setState({ form: {}, tipoModal: "insertar" });
@@ -122,7 +123,7 @@ class App extends Component {
           }}
         >
           Agregar Producto
-        </button>
+        </Button>
         <br />
         <br />
         <table className="table ">
@@ -134,8 +135,8 @@ class App extends Component {
               <th>PROVEEDOR</th>
               <th>DESCRIPCION</th>
               <th>FECHA INGRESO</th>
-              <th>PRECIO</th>
               <th>ESTADO</th>
+              <th>PRECIO</th>
               <th>ACCIONES</th>
             </tr>
           </thead>
@@ -154,25 +155,25 @@ class App extends Component {
                     {new Intl.NumberFormat("en-EN").format(Productos.Precio)}
                   </td>
                   <td>
-                    <button
+                    <Button
                       className="btn btn-primary"
                       onClick={() => {
-                        this.seleccionarEmpresa(Productos);
+                        this.seleccionarProducto(Productos);
                         this.modalInsertar();
                       }}
                     >
                       <FontAwesomeIcon icon={faEdit} />
-                    </button>
+                    </Button>
                     {"   "}
-                    <button
+                    <Button
                       className="btn btn-danger"
                       onClick={() => {
-                        this.seleccionarEmpresa(Productos);
+                        this.seleccionarProducto(Productos);
                         this.setState({ modalEliminar: true });
                       }}
                     >
                       <FontAwesomeIcon icon={faTrashAlt} />
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               );
@@ -191,7 +192,7 @@ class App extends Component {
           </ModalHeader>
           <ModalBody>
             <div className="form-group">
-              {/* <label htmlFor="IdProducto">ID</label>
+              <label htmlFor="IdProducto">ID</label>
               <input
                 className="form-control"
                 type="text"
@@ -200,7 +201,7 @@ class App extends Component {
                 readOnly
                 onChange={this.handleChange}
                 value={form.IdProducto || this.state.data.length + 1}
-              /> */}
+              />
               <br />
               <label htmlFor="Nombre">PRODUCTO</label>
               <input
@@ -275,26 +276,26 @@ class App extends Component {
           </ModalBody>
           <ModalFooter>
             {this.state.tipoModal === "insertar" ? (
-              <button
+              <Button
                 className="btn btn-success"
                 onClick={() => this.peticionPost()}
               >
                 Insertar
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
                 className="btn btn-primary"
                 onClick={() => this.peticionPut()}
               >
                 Actualizar
-              </button>
+              </Button>
             )}
-            <button
+            <Button
               className="btn btn-danger"
               onClick={() => this.modalInsertar()}
             >
               Cancelar
-            </button>
+            </Button>
           </ModalFooter>
         </Modal>
 
@@ -303,18 +304,18 @@ class App extends Component {
             Estás seguro que deseas eliminar a la empresa {form && form.Nombre}
           </ModalBody>
           <ModalFooter>
-            <button
+            <Button
               className="btn btn-danger"
               onClick={() => this.peticionDelete()}
             >
               Sí
-            </button>
-            <button
+            </Button>
+            <Button
               className="btn btn-secondary"
               onClick={() => this.setState({ modalEliminar: false })}
             >
               No
-            </button>
+            </Button>
           </ModalFooter>
         </Modal>
       </div>

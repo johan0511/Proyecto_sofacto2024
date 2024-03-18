@@ -1,45 +1,123 @@
-###
-//Consultar
-GET http://localhost:3000 HTTP/1.1
+//productos
 
 ###
-
-GET http://localhost:3000/PR10 HTTP/1.1
+GET http://localhost:3000/ HTTP/1.1
 
 ###
 POST http://localhost:3000/crear HTTP/1.1
 Content-Type: application/json
 
-{
-    "IdProducto":"PR8",
-    "Nombre": "prueba desde http",
-    "Nombre_categoria_FK": 1,
-    "Proveedor": "Campesino El Mono",
-    "Descripcion": "5 Lb",
-    "Fecha": "2020-11-03",
-    "Estado": "Disponible",
-    "Precio": 43000
-}
-
-
+  {
+    "Nombre": "Queso doble cremas",
+    "Nombre_categoria_FK": "Lacteos",
+    "Proveedor": "Santo domingo",
+    "Descripcion": "Bloque - 4 Lb",
+    "Fecha": "2024-05-22T05:00:00.000Z",
+    "Estado": "Agotado",
+    "Precio": 2500
+  }
 
 ###
-//Actualizar
-PUT http://localhost:3000/actualizar/PR10 HTTP/1.1
+PUT http://localhost:3000/actualizar/1 HTTP/1.1
+Content-Type: application/json
+
+  {
+    "Nombre": "Queso doble cremoso",
+    "Nombre_categoria_FK": "Lacteos",
+    "Proveedor": "Santo domingos",
+    "Descripcion": "Bloque - 4 Lb",
+    "Fecha": "2024-05-22T05:00:00.000Z",
+    "Estado": "Agotado",
+    "Precio": 2500
+  }
+
+###
+  DELETE http://localhost:3000/eliminar/3 HTTP/1.1
+
+
+
+//Cargos - empleados
+###
+GET http://localhost:3000/Cargos/C HTTP/1.1
+
+###
+POST http://localhost:3000/Cargos/agregar HTTP/1.1
+Content-Type: application/json
+
+  {
+    "Id": 14588755,
+    "Nombre": "Marco Felipe",
+    "Nombre_cargo": "Empleado",
+    "Estado_actual": "Activo"
+  }
+
+###
+PUT http://localhost:3000/Cargos/actualizar/80355696 HTTP/1.1
+Content-Type: application/json
+
+  {
+    "Id": 8214578,
+    "Nombre": "Marcos Felipe",
+    "Nombre_cargo": "Empleados",
+    "Estado_actual": "Activos"
+  }
+
+###
+DELETE http://localhost:3000/Cargos/eliminar/2147483647 HTTP/1.1
+
+
+//Empleados
+
+###
+GET http://localhost:3000/empleados/E HTTP/1.1
+
+###
+POST http://localhost:3000/Productos/agregar HTTP/1.1
+Content-Type: application/json
+
+
+//Pruebas http ventas
+
+###
+// Consultar todas las ventas
+GET http://localhost:3000/ HTTP/1.1
+
+###z
+
+// Consultar venta por ID
+GET http://localhost:3000/2 HTTP/1.1
+
+###
+// Crear una nueva venta
+POST http://localhost:3000/crear HTTP/1.1
 Content-Type: application/json
 
 {
-    "IdProducto":"PR10",
-    "Nombre": "Queso Campesino",
-    "Nombre_categoria_FK": "Lacteos",
-    "Proveedor": "Campesino El Mono",
-    "Descripcion": "5 Lb",
+    "Producto": "prueba desde http",
     "Fecha": "2020-11-03",
-    "Estado": "Disponible",
-    "Precio": 43000
+    "cantidad": 5,
+    "Precio": 43000,
+    "Total": 5553
 }
 
+###
+// Actualizar una venta
+PUT http://localhost:3000/actualizar/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "Producto": "Queso Campesino",
+    "Fecha": "2020-11-03",
+    "cantidad": 5,
+    "Precio": 43000,
+    "Total": 555
+}
 
 ###
-//Borrar
-DELETE http://localhost:3000/eliminar/PR8 HTTP/1.1
+// Borrar una venta
+DELETE http://localhost:3000/eliminar/3 HTTP/1.1
+
+//usuarios
+
+###
+GET http://localhost:3000/Usuario/ HTTP/1.1

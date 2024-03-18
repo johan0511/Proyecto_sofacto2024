@@ -11,6 +11,15 @@ body {
   background-color: #ffffff00;
 }
 
+li a{
+  text-decoration: none;
+  text-align: center;
+  font-size: 15px;
+  position: relative;
+  top: -10px;
+  color: rgb(255, 255, 255);
+}
+
 .fondo {
   display: flex;
   left: 0px;
@@ -73,24 +82,29 @@ form {
   position: fixed;
   bottom: 330px;
   left: 180px;
-  -webkit-border-radius: ;
-  -moz-border-radius: ;
-  -ms-border-radius: ;
-  -o-border-radius: ;
 }
 
-.bg-default-100 {
-  --tw-bg-opacity: 1;
-  color: #000000;
-  border: #003554;
-  /* background-color: hsl(0, 0%, 0%); */
-}
 .form-inicio1 {
   background-color: #ffffff;
   padding: 20px;
   position: relative;
-  height: 630px;
-  bottom: 50%;
+  left: 500px;
+  bottom: 60%;
+  border-radius: 0px 80px important!;
+  box-shadow: 0 0 10px rgb(0, 0, 0);
+  width: 350px;
+  -webkit-border-radius: 0px 80px important!;
+  -moz-border-radius: 0px 80px important!;
+  -ms-border-radius: 0px 80px important!;
+  -o-border-radius: 0px 80px important!;
+}
+
+.form-inicio0 {
+  background-color: #ffffff;
+  padding: 20px;
+  position: relative;
+  left: 500px;
+  bottom: 0%;
   border-radius: 0px 80px important!;
   box-shadow: 0 0 10px rgb(0, 0, 0);
   width: 350px;
@@ -104,7 +118,7 @@ h1 {
   font-size: 20px;
 }
 
-.form-inicio {
+button .form-inicio {
   background-color: #ffffff;
   padding: 20px;
   position: relative;
@@ -134,6 +148,7 @@ h1 {
 a {
   color: #3498db;
   text-decoration: none;
+  position: relative;
   font-size: 0.9rem;
   margin-bottom: 0px;
 }
@@ -192,14 +207,20 @@ header {
   padding-left: 14px;
 }
 
-.navh,
+.navh {
+  font-size: 55px;
+  display: flex;
+  position: fixed;
+  text-align: center;
+  text-shadow: 1px 4px #003554;
+  color: #fdfffc;
+}
+
 h2 {
   font-size: 55px;
   display: flex;
   position: fixed;
-  left: 39%;
   text-align: center;
-  text-shadow: 1px 4px #003554;
   color: #fdfffc;
 }
 
@@ -254,12 +275,6 @@ ul {
   cursor: pointer;
 }
 
-a {
-  text-decoration: none;
-  color: black;
-  cursor: pointer;
-}
-
 .login {
   display: flex;
   align-items: center;
@@ -277,7 +292,21 @@ a {
 li {
   list-style: none;
   padding: 15px;
+  text-decoration: none;
+  font-size: 20px;
   color: black;
+  text-align: center;
+}
+
+.login a {
+  padding: 5px;
+  text-decoration: none;
+  position: relative;
+  top: 10px;
+  font-size: 16px;
+  right: 15px;
+  margin: 2px;
+  color: rgb(29, 99, 146);
   text-align: center;
 }
 
@@ -384,10 +413,124 @@ footer {
   display: flex;
 }
 
-button {
-  padding: 5px;
-  /* border: 1px solid #000; */
-  border-radius: 20px;
-  color: #005f73;
-  background-color: #ffffff;
+Link {
+  left: 40%;
+  position: relative;
+}
+
+.tAbP {
+  bottom: 220px;
+  display: fixed;
+  width: 900px;
+  height: auto;
+  padding: 10px;
+  border-radius: 50px 0px 50px 0;
+  border: 1px solid #000;
+  margin: 1px auto;
+}
+
+.h2Invet {
+  font-size: 50px;
+  position: static;
+  display: block;
+  bottom: 15px;
+  text-shadow: 1px 2px #a2a2a2;
+  color: #003554;
+  margin: 0 15px;
+}
+
+/* Estilos Imagen Container */
+.ContIma {
+  display: inline-block;
+  margin: 55px;
+  left: 12px;
+  max-width: 240px; /* Máximo ancho */
+}
+
+.ContIma img {
+  display: block;
+  z-index: 10;
+  opacity: 100;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Transición suave */
+
+  /* Otros estilos específicos */
+  border-radius: 20px; /* Redondeado grande */
+}
+
+.ContIma img:hover {
+  transform: scale(1.12); /* Escalado al hacer hover */
+}
+
+/* Estilos Imagen y animacion  */
+.ImgS {
+  margin: 17px;
+  display: block;
+
+  z-index: 10;
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Transición suave */
+  border-radius: 20px; /* Redondeado grande */
+  width: 240px; /* Ancho fijo */
+}
+
+.ImgS:hover {
+  transform: scale(1.12); /* Escalado al hacer hover */
+}
+
+.QrpInv {
+  bottom: 220px;
+  display: fixed;
+  width: 800px;
+  height: auto;
+  padding: 10px;
+  border-radius: 50px 0px 50px 0;
+  border: 1px solid #000;
+  margin: 1px auto;
+}
+
+.TextInv {
+  font-size: 40px;
+  text-align: center;
+  align-items: center;
+}
+
+
+.Fac3 {
+  font-size: 30px;
+  text-align: left;
+  text-shadow: 1px 2px #a2a2a2;
+  color: #003554;
+  font-weight: 600;
+}
+
+.imgFac {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dtafactura {
+  display: inline-block;
+  position: relative;
+  left: 380px;
+  width: 320px;
+}
+
+.dtacliente {
+  display: inline-block;
+  position: relative;
+  left: 160px;
+  width: 320px;
+}
+
+.tAbFactura {
+  bottom: 220px;
+  display: fixed;
+  width: 1230px;
+  height: auto;
+  padding: 10px;
+  border-radius: 50px 0px 50px 0;
+  border: 1px solid #000;
+  margin: 1px auto;
 }

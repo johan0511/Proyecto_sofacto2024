@@ -1,39 +1,41 @@
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  User,
-} from "@nextui-org/react";
+import { User } from "@nextui-org/react";
+import Swal from 'sweetalert2';
 
-export default function Avat() {
+export default function Avatar() {
+  const handleLogout = () => {
+    Swal.fire({
+      title: '¿Seguro que quieres cerrar sesión?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Aquí puedes poner la lógica para cerrar la sesión, por ejemplo:
+        // window.location.href = 'http://localhost:3001/#';
+        // O cualquier otra forma que utilices para cerrar la sesión en tu aplicación.
+        console.log('Cerrar sesión');
+      }
+    });
+  };
+
   return (
-    <div className="flex items-center gap-4">
-      <Dropdown placement="bottom-start">
-        <DropdownTrigger>
-          <User
-            as="button"
-            avatarProps={{
-              isBordered: true,
-              src: "../src/img/gmail.png",
-            }}
-            className="transition-transform"
-            name="Joguetta"
-            description="Administrador"
-          />
-        </DropdownTrigger>
-        <DropdownMenu aria-label="User Actions" variant="flat">
-          <DropdownItem key="settings" color="primary">
-            Actualizar perfil
-          </DropdownItem>
-          <DropdownItem key="logout" color="warning">
-            Gestionar empleados
-          </DropdownItem>
-          <DropdownItem key="logout" color="danger">
-            Cerrar sesión
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    </div>
+    <ul className="menu">
+      <li>
+        <a href="http://localhost:3001/proveedor" className="">
+          Proveedores
+        </a>
+      </li>
+      <li>
+        <a href="http://localhost:3001/empleados" className="">
+          Gestionar empleados
+        </a>
+      </li>
+      <li>
+        <a href="#" onClick={handleLogout}>
+          Cerrar sesión
+        </a>
+      </li>
+    </ul>
   );
 }
