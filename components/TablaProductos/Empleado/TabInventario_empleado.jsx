@@ -10,10 +10,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { Pie } from "react-chartjs-2";
-import { Chart, ArcElement } from "chart.js";
-
-Chart.register(ArcElement);
 
 const url = "http://localhost:3000";
 
@@ -242,11 +238,27 @@ class App extends Component {
   };
 
   seleccionarProducto = (Productos) => {
-    const { Id_categoria, Fecha, ...rest } = Productos;
+    const { Id_categoria, ...rest } = Productos;
 
-    // Formatear la fecha
-    const formattedFecha = new Date(Fecha).toISOString().split("T")[0];
-
+    const fecha = new Date(Productos.Fecha);
+    const day = fecha.getDate().toString().padStart(2, "0");
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const month = monthNames[fecha.getMonth()];
+    const year = fecha.getFullYear();
+    const formattedFecha = `${day}-${month}-${year}`;
     this.setState({
       form: {
         ...rest,
@@ -325,32 +337,6 @@ class App extends Component {
       </li>
     ));
 
-    // Obtener los datos para la gráfica circular
-    const productCounts = this.state.productosAgrupados.map(
-      (producto) => producto.Cantidad
-    );
-    const productNames = this.state.productosAgrupados.map(
-      (producto) => producto.Nombre
-    );
-
-    // Configurar los datos de la gráfica circular
-    const pieData = {
-      labels: productNames,
-      datasets: [
-        {
-          data: productCounts,
-          backgroundColor: [
-            "#FF6384",
-            "#36A2EB",
-            "#FFCE56",
-            "#4BC0C0",
-            "#9966FF",
-            "#FF9F40",
-          ],
-        },
-      ],
-    };
-
     return (
       <div className="App">
         <br />
@@ -389,11 +375,6 @@ class App extends Component {
             </thead>
             <tbody>
               {currentProducts.map((Productos) => {
-                // Formatear la fecha
-                const formattedFecha = new Date(Productos.Fecha)
-                  .toISOString()
-                  .split("T")[0];
-
                 return (
                   <tr key={Productos.IdProducto}>
                     <td>{Productos.IdProducto}</td>
@@ -401,8 +382,7 @@ class App extends Component {
                     <td>{Productos.Nombre_categoria}</td>
                     <td>{Productos.Proveedor}</td>
                     <td>{Productos.Descripcion}</td>
-                    <td>{formattedFecha}</td>{" "}
-                    {/* Aquí se muestra la fecha formateada */}
+                    <td>{Productos.Fecha}</td>
                     <td>{Productos.Estado}</td>
                     <td>
                       {new Intl.NumberFormat("en-EN").format(Productos.Precio)}
@@ -462,24 +442,6 @@ class App extends Component {
             {renderPageNumbers}
           </ul>
         </nav>
-
-        {/* Tabla con la gráfica circular */}
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Porcentaje de Productos Agregados</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div style={{ width: "400px", margin: "0 auto" }}>
-                  <Pie data={pieData} />
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
 
         <Modal isOpen={this.state.modalInsertar}>
           <ModalHeader style={{ display: "block" }}>

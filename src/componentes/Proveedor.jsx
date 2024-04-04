@@ -5,7 +5,6 @@ import Avat from "../../components/Avatar";
 import App from "../../components/TablaProductos/Tabpro";
 import { Link } from "react-router-dom";
 
-
 export const Proveedor = () => {
   return (
     <>
@@ -21,20 +20,17 @@ export const Proveedor = () => {
             Inventario
           </Button>
         </Link>
-        <Link to="/">
+        <Link to="/venta">
           <Button className="BtnN" color="success" variant="shadow">
             Registro Ventas
-          </Button>
-        </Link>
-        <Link to="/">
-          <Button className="BtnN" color="success" variant="shadow">
-            Informe Ventas
           </Button>
         </Link>
         <div className="Avat">
           <Avat />
         </div>
       </div>
+      <br />
+      <br />
       <br />
       <br />
       <br />

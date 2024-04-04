@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 import { Input, Button } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import { EyeFilledIcon } from "../../components/EyeFilledIcon";
@@ -8,10 +9,10 @@ import logoempresa from "/src/img/logoempresa.png";
 export const IniciarSesion = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({
-    correo: "", // Cambiado a 'correo' para que coincida con el nombre en el backend
-    contrasena: "", // Cambiado a 'contrasena' para que coincida con el nombre en el backend
+    correo: "",
+    contrasena: "",
   });
-  const [isDecrypting, setIsDecrypting] = useState(false);
+
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleInputChange = (e, fieldName) => {
@@ -28,30 +29,46 @@ export const IniciarSesion = () => {
       const { correo, contrasena } = formData;
       console.log("Iniciando sesión...");
 
-      // Hacer solicitud HTTP a la API para validar las credenciales
       const response = await fetch("http://localhost:3000/login/logeo", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ correo, contrasena }), // Enviar correo y contraseña al backend
+        body: JSON.stringify({ correo, contrasena }),
       });
 
       if (response.ok) {
         console.log("Inicio de sesión exitoso");
-
-        // Obtener el cargo del usuario desde la respuesta del backend
         const data = await response.json();
-        const cargo = data.usuario.IdCargo; // Suponiendo que el campo se llama 'IdCargo'
+        const cargo = data.usuario.IdCargo;
 
-        // Redireccionar a la página correspondiente según el cargo
+        // Guardar los datos del usuario en el almacenamiento local
+        localStorage.setItem("user", JSON.stringify({ formData }));
+
+        let redirectPath = "/menu"; // Ruta predeterminada de redirección
+
         if (cargo === "Administrador") {
-          window.location.href = "/menu"; // Por ejemplo, si el cargo es 'admin'
+          redirectPath = "/menuadmin";
         } else if (cargo === "Empleado") {
-          window.location.href = "/menu"; // Por ejemplo, si el cargo es 'empleado'
+          redirectPath = "/menuemple";
         }
+
+        Swal.fire({
+          icon: "success",
+          title: "¡Bienvenido de vuelta!",
+          text: `Estimado: ${cargo}`,
+          confirmButtonText: "Ok",
+        }).then(() => {
+          window.location.href = redirectPath; // Redirigir a la ruta correspondiente
+        });
       } else {
         console.error("Credenciales incorrectas");
+        Swal.fire({
+          icon: "error",
+          title: "¡Error!",
+          text: "Credenciales incorrectas",
+          confirmButtonText: "Ok",
+        });
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
@@ -62,7 +79,9 @@ export const IniciarSesion = () => {
     <div>
       <header>
         <div className="logo">
-          <Link to="/"><img src={logoempresa} alt="Logo" width={100} /></Link>
+          <Link to="/">
+            <img src={logoempresa} alt="Logo" width={100} />
+          </Link>
         </div>
       </header>
       <div className="fondo">
@@ -101,19 +120,11 @@ export const IniciarSesion = () => {
             />
             <a href="/contrasena">¿Olvidaste tu contraseña?</a>
             <br />
-            {isDecrypting && <p>Sesión iniciada</p>}
             <br />
             <Button color="primary" variant="ghost" type="submit">
               Iniciar sesión
             </Button>
             <br />
-            O
-            <br />
-            <Link to="/nuevousuario">
-              <Button color="primary" variant="ghost">
-                Registrarse
-              </Button>
-            </Link>
           </form>
         </div>
       </div>

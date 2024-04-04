@@ -30,7 +30,7 @@ class Emple extends Component {
 
   peticionPost = async () => {
     try {
-      const response = await axios.post(apiUrl + "agregar", this.state.form);
+      const response = await axios.post(apiUrl + "crear", this.state.form);
 
       if (response.status === 200) {
         this.peticionGet();
@@ -203,24 +203,30 @@ class Emple extends Component {
               />
               <br />
               <label htmlFor="Nombre_cargo">Cargo</label>
-              <input
+              <select
                 className="form-control"
-                type="text"
                 name="Nombre_cargo"
                 id="Nombre_cargo"
                 onChange={this.handleChange}
                 value={form.Nombre_cargo || ""}
-              />
+              >
+                <option value="">Seleccione un cargo</option>
+                <option value="Administrador">Administrador</option>
+                <option value="Empleado">Empleado</option>
+              </select>
               <br />
               <label htmlFor="Estado_actual">Estado actual</label>
-              <input
+              <select
                 className="form-control"
-                type="text"
                 name="Estado_actual"
                 id="Estado_actual"
                 onChange={this.handleChange}
                 value={form.Estado_actual || ""}
-              />
+              >
+                <option value="">Seleccione un estado</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
               <br />
             </div>
           </ModalBody>

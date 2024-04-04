@@ -1,27 +1,23 @@
-import logoempresa from "../img/logoempresa.png";
+import logoempresa from "../../img/logoempresa.png";
 import { Button } from "@nextui-org/button";
-import Avat from "../../components/Avatar";
-import App from "../../components/TablaProductos/TabVenta";
+// import Table from "../../components/TablaProductos/App";
+import Avat from "../../../components/TablaProductos/Empleado/Avatar_empleado";
+import App from "../../../components/TablaProductos/TabInventario";
 import { Link } from "react-router-dom";
 
-const Informe_venta = () => {
+ const Inventario = () => {
   return (
     <>
       <div className="nav">
         <img src={logoempresa} alt="Logo" className="navlg" />
-        <Link to="/factura">
+        <Link to="/factura_empleado">
           <Button className="BtnN" color="success" variant="shadow">
             Factura
           </Button>
         </Link>
-        <Link to="/inventario">
+        <Link to="/inventario_empleado">
           <Button className="BtnN" color="success" variant="shadow">
             Inventario
-          </Button>
-        </Link>
-        <Link to="/venta">
-          <Button className="BtnN" color="success" variant="shadow">
-            Registro Ventas
           </Button>
         </Link>
         <div className="Avat">
@@ -39,4 +35,4 @@ const Informe_venta = () => {
   );
 };
 
-export default Informe_venta;
+export default Inventario;

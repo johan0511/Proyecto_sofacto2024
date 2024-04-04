@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
-import Avat from "../../components/Avatar";
+import Avat from "../../../components/TablaProductos/Empleado/Avatar_empleado";
 import { Link } from "react-router-dom";
 import { Input } from "@nextui-org/react";
-import logoempresa from "../img/logoempresa.png";
+import logoempresa from "./../../../src/img/logoempresa.png";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import axios from "axios";
 import Swal from "sweetalert2";
 import QRCode from "qrcode";
 
-export function Factura() {
+function Factura() {
   const [idCliente, setIdCliente] = useState("");
   const [nombreCliente, setNombreCliente] = useState("");
   const [direccionCliente, setDireccionCliente] = useState("");
@@ -747,230 +747,210 @@ export function Factura() {
 
   return (
     <>
+      <div className="nav">
+        <img src={logoempresa} alt="Logo" className="navlg" />
+        <Link to="/factura_empleado">
+          <Button className="BtnN" color="success" variant="shadow">
+            Factura
+          </Button>
+        </Link>
+        <Link to="/inventario_empleado">
+          <Button className="BtnN" color="success" variant="shadow">
+            Inventario
+          </Button>
+        </Link>
+        <div className="Avat">
+          <Avat />
+        </div>
+      </div>
       <br />
-      <div className="tAbFactura">
-        <div className="nav">
-          <img src={logoempresa} alt="Logo" className="navlg" />
-          <Link to="/factura">
-            <Button className="BtnN" color="success" variant="shadow">
-              Factura
-            </Button>
-          </Link>
-          <Link to="/inventario">
-            <Button className="BtnN" color="success" variant="shadow">
-              Inventario
-            </Button>
-          </Link>
-          <Link to="/venta">
-            <Button className="BtnN" color="success" variant="shadow">
-              Registro Ventas
-            </Button>
-          </Link>
-          <div className="Avat">
-            <Avat />
+      <br />
+      <br />
+      <br />
+      <div className="container">
+        <div className="row">
+          <div className="col-md-6">
+            <div className="card">
+              <div className="card-body">
+                <h4 className="card-title">Detalles del Cliente</h4>
+                <Input
+                  label="Número de Identificación"
+                  id="idCliente"
+                  className="mb-3"
+                  value={idCliente}
+                  onChange={(e) => setIdCliente(e.target.value)}
+                />
+                <Input
+                  label="Nombre del Cliente"
+                  id="nombreCliente"
+                  className="mb-3"
+                  value={nombreCliente}
+                  onChange={(e) => setNombreCliente(e.target.value)}
+                />
+                <Input
+                  label="Dirección"
+                  id="direccionCliente"
+                  className="mb-3"
+                  value={direccionCliente}
+                  onChange={(e) => setDireccionCliente(e.target.value)}
+                />
+                <Input
+                  label="Teléfono"
+                  id="telefonoCliente"
+                  className="mb-3"
+                  value={telefonoCliente}
+                  onChange={(e) => setTelefonoCliente(e.target.value)}
+                />
+                <Input
+                  label="Email"
+                  id="emailCliente"
+                  className="mb-3"
+                  value={emailCliente}
+                  onChange={(e) => setEmailCliente(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="card">
+              <div className="card-body">
+                <h4 className="card-title">Detalles de la Factura</h4>
+                <Input
+                  label="N° Factura"
+                  id="numeroFactura"
+                  className="mb-3"
+                  value={numeroFactura}
+                  readOnly
+                />
+                <Input type="date" label="Fecha" className="mb-3" />
+                <div>
+                  <select
+                    className="select_pago"
+                    name="metodoPago"
+                    id="metodoPago"
+                  >
+                    <option value="">Selecciona el metodo de pago</option>
+                    {metodosPago.map((metodo, index) => (
+                      <option key={index} value={metodo.Metodo_pago}>
+                        {metodo.Metodo_pago}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="select_nombre"
+                    name="nombreEmpleado"
+                    id="nombreEmpleado"
+                  >
+                    <option value="">Selecciona el empleado</option>
+                    {empleados.map((empleado, index) => (
+                      <option key={index} value={empleado.Nombre}>
+                        {empleado.Nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-body">
-                  <h4 className="card-title">Detalles del Cliente</h4>
-                  <Input
-                    label="Número de Identificación"
-                    id="idCliente"
-                    type="number"
-                    className="mb-3"
-                    value={idCliente}
-                    onChange={(e) => setIdCliente(e.target.value)}
-                  />
-                  <Input
-                    label="Nombre del Cliente"
-                    id="nombreCliente"
-                    className="mb-3"
-                    value={nombreCliente}
-                    onChange={(e) => setNombreCliente(e.target.value)}
-                  />
-                  <Input
-                    label="Dirección"
-                    id="direccionCliente"
-                    className="mb-3"
-                    value={direccionCliente}
-                    onChange={(e) => setDireccionCliente(e.target.value)}
-                  />
-                  <Input
-                    label="Teléfono"
-                    id="telefonoCliente"
-                    type="number"
-                    className="mb-3"
-                    value={telefonoCliente}
-                    onChange={(e) => setTelefonoCliente(e.target.value)}
-                  />
-                  <Input
-                    label="Email"
-                    id="emailCliente"
-                    type="email"
-                    className="mb-3"
-                    value={emailCliente}
-                    onChange={(e) => setEmailCliente(e.target.value)}
-                    onBlur={() => {
-                      if (!emailCliente.includes("@")) {
-                        alert("Debe ingresar un correo válido");
+        <div className="row mt-4">
+          <div className="col-md-12">
+            <div className="card">
+              <div className="card-body">
+                <h4 className="card-title">Productos</h4>
+                <div className="row">
+                  <br />
+                  <br />
+                  <div className="col-md-4">
+                    <select
+                      className="select_producto"
+                      onChange={(e) =>
+                        handleProductoSeleccionado(e.target.value)
                       }
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-body">
-                  <h4 className="card-title">Detalles de la Factura</h4>
-                  <Input
-                    label="N° Factura"
-                    id="numeroFactura"
-                    className="mb-3"
-                    value={numeroFactura}
-                    readOnly
-                  />
-                  <Input type="date" label="Fecha" className="mb-3" />
-                  <div>
-                    <select
-                      className="select_pago"
-                      name="metodoPago"
-                      id="metodoPago"
                     >
-                      <option value="">Selecciona el metodo de pago</option>
-                      {metodosPago.map((metodo, index) => (
-                        <option key={index} value={metodo.Metodo_pago}>
-                          {metodo.Metodo_pago}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      className="select_nombre"
-                      name="nombreEmpleado"
-                      id="nombreEmpleado"
-                    >
-                      <option value="">Selecciona el empleado</option>
-                      {empleados.map((empleado, index) => (
-                        <option key={index} value={empleado.Nombre}>
-                          {empleado.Nombre}
+                      <option label="Seleccione el producto" value=""></option>
+                      {productosDisponibles.map((producto, index) => (
+                        <option key={index} value={producto.Nombre}>
+                          {producto.Nombre}
                         </option>
                       ))}
                     </select>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="row mt-4">
-            <div className="col-md-12">
-              <div className="card">
-                <div className="card-body">
-                  <h4 className="card-title">Productos</h4>
-                  <div className="row">
-                    <br />
-                    <br />
-                    <div className="col-md-4">
-                      <select
-                        className="select_producto"
-                        onChange={(e) =>
-                          handleProductoSeleccionado(e.target.value)
-                        }
-                      >
-                        <option
-                          label="Seleccione el producto"
-                          value=""
-                        ></option>
-                        {productosDisponibles.map((producto, index) => (
-                          <option key={index} value={producto.Nombre}>
-                            {producto.Nombre}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                  <div className="col-md-2">
+                    <Input
+                      label="Precio"
+                      className="mb-3"
+                      value={productoPrecio.toLocaleString("es-CO")}
+                      readOnly
+                    />
                     <div className="col-md-2">
                       <Input
-                        label="Precio"
+                        label="Cantidad"
                         className="mb-3"
-                        value={productoPrecio.toLocaleString("es-CO")}
-                        readOnly
+                        type="number"
+                        value={cantidadProducto}
+                        onChange={(e) => setCantidadProducto(e.target.value)}
                       />
-                      <div className="col-md-2">
-                        <Input
-                          label="Cantidad"
-                          className="mb-3"
-                          type="number"
-                          value={cantidadProducto}
-                          onChange={(e) => setCantidadProducto(e.target.value)}
-                        />
-                      </div>
-                      <div className="botones-factura">
-                        <Button onClick={agregarProducto}>
-                          Agregar Producto
-                        </Button>
-                        <Button onClick={confirmarVenta}>Generar Venta</Button>
-                      </div>
+                    </div>
+                    <div className="botones-factura">
+                      <Button onClick={agregarProducto}>
+                        Agregar Producto
+                      </Button>
+                      <Button onClick={confirmarVenta}>Generar Venta</Button>
                     </div>
                   </div>
-                  <div className="tabla">
-                    <table className="table mt-4">
-                      <thead>
-                        <tr>
-                          <th>Descripción</th>
-                          <th>Cantidad</th>
-                          <th>Precio</th>
-                          <th>Total</th>
-                          <th>Acciones</th>
+                </div>
+                <div className="tabla">
+                  <table className="table mt-4">
+                    <thead>
+                      <tr>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {productosAgregados.map((producto, index) => (
+                        <tr key={index}>
+                          <td>{producto.Nombre}</td>
+                          <td>{producto.Cantidad}</td>
+                          <td>${producto.Precio.toLocaleString("es-CO")}</td>
+                          <td>
+                            $
+                            {(
+                              producto.Precio * producto.Cantidad
+                            ).toLocaleString("es-CO")}
+                          </td>
+                          <td>
+                            <Button
+                              color="error"
+                              onClick={() => eliminarProducto(index)}
+                            >
+                              Eliminar
+                            </Button>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {productosAgregados.map((producto, index) => (
-                          <tr key={index}>
-                            <td>{producto.Nombre}</td>
-                            <td>{producto.Cantidad}</td>
-                            <td>${producto.Precio.toLocaleString("es-CO")}</td>
-                            <td>
-                              $
-                              {(
-                                producto.Precio * producto.Cantidad
-                              ).toLocaleString("es-CO")}
-                            </td>
-                            <td>
-                              <Button
-                                color="error"
-                                onClick={() => eliminarProducto(index)}
-                              >
-                                Eliminar
-                              </Button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  <div className="precios">
-                    <h5>
-                      Subtotal: ${subtotalProductos.toLocaleString("es-CO")}
-                    </h5>
-                    <h5>
-                      IVA (19%): $
-                      {(subtotalProductos * 0.19).toLocaleString("es-CO")}
-                    </h5>
-                    <h4>
-                      Total: $
-                      {(subtotalProductos * 1.19).toLocaleString("es-CO")}
-                    </h4>
-                    <h5>
-                      Dinero Recibido: ${valorRecibido.toLocaleString("es-CO")}
-                    </h5>
-                    <h5>Cambio: ${cambioDinero.toLocaleString("es-CO")}</h5>
-                  </div>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="precios">
+                  <h5>
+                    Subtotal: ${subtotalProductos.toLocaleString("es-CO")}
+                  </h5>
+                  <h5>
+                    IVA (19%): $
+                    {(subtotalProductos * 0.19).toLocaleString("es-CO")}
+                  </h5>
+                  <h4>
+                    Total: ${(subtotalProductos * 1.19).toLocaleString("es-CO")}
+                  </h4>
+                  <h5>
+                    Dinero Recibido: ${valorRecibido.toLocaleString("es-CO")}
+                  </h5>
+                  <h5>Cambio: ${cambioDinero.toLocaleString("es-CO")}</h5>
                 </div>
               </div>
             </div>
@@ -980,3 +960,5 @@ export function Factura() {
     </>
   );
 }
+
+export default Factura;

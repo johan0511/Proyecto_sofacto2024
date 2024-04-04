@@ -51,7 +51,6 @@ const iniciarSesion = async (req, res) => {
   }
 };
 
-// Función para obtener un usuario por correo y contraseña
 const obtenerUsuarioPorCorreoYContrasena = async (req, res) => {
   const { correo, contrasena } = req.body;
   try {

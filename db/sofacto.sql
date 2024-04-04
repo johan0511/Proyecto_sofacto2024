@@ -62,6 +62,18 @@ CREATE TABLE Productos (
   FOREIGN KEY (IdCategoria_FK) REFERENCES Categoria(IdCategoria)
 );
 
+SELECT Nombre, COUNT(*) AS Cantidad, Estado AS Disponibilidad
+FROM Productos
+WHERE Estado = 'Disponible'
+GROUP BY Nombre, Estado;
+
+CREATE TABLE ProductosDisponibles (
+  Nombre varchar(30) NOT NULL,
+  Cantidad INT NOT NULL,
+  Disponibilidad ENUM('Disponible', 'Agotado') NOT NULL
+);
+
+
 CREATE TABLE Proveedor (
   IdProveedor INT AUTO_INCREMENT PRIMARY KEY,
   Empresa VARCHAR(25) NOT NULL,

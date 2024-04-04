@@ -1,16 +1,24 @@
 const express = require("express");
 const cors = require("cors");
+const rutaSelect = require("./Routers/InputSelect");
+const NombreProveedor = require("./Routers/NombreProveedor");
 const bodyParser = require("body-parser");
 const datosRouter = require("./Routers/datosRouter");
 const rutaCargos = require("./Routers/Nombre_cargo");
-const proveedorRouter = require("./Routers/ProveedorRouter");
-const usuariosRouter = require("./Routers/nuevousuario");
-const ventasRouter = require("./Routers/ventasRouter");
-const loginRouter = require("./Routers/login");
-const rutaSelect = require("./Routers/InputSelect");
+const proveedor = require("./Routers/ProveedorRouter");
+const usuarios = require("./Routers/nuevousuario");
+const nuevousuario = require("./Routers/nuevousuario");
+const ventas = require("./Routers/ventasRouter");
+const login = require("./Routers/login");
 const rutaIdSelect = require("./Routers/IdSelect");
 const rutaFacturas = require("./Routers/RutasFactura");
-// const recuperarContrasenaRouter = require("./Routers/recuperarcontrasena");
+const rutaPago = require("./Routers/rutaPago");
+const productosController = require("./Routers/IdSelectproductos");
+const rutaSelecttrabajador = require("./Routers/IdSelecttrabajador");
+const ventasgeneradas = require("./Routers/ventasRouter");
+
+
+// const recuperar_contrasena = require("./Routers/recuperarcontrasena");
 
 const app = express();
 
@@ -23,15 +31,22 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 app.use("/", datosRouter);
-app.use("/cargos", rutaCargos);
-app.use("/proveedor", proveedorRouter);
-app.use("/ventas", ventasRouter);
-app.use("/usuarios", usuariosRouter);
-app.use("/login", loginRouter);
-app.use("/select", rutaSelect);
+app.use("/Cargos", rutaCargos);
+app.use("/producto", productosController);
+app.use("/Proveedor", proveedor);
+app.use("/vent", ventas);
+app.use("/usuario", usuarios);
+app.use("/login", login);
 app.use("/id", rutaIdSelect);
-app.use("/fact", rutaFacturas);
-// app.use("/recuperar-contrasena", recuperarContrasenaRouter);
+app.use("/nuevousuario", nuevousuario);
+app.use("/select", rutaSelect);
+app.use("/facturas_vendidas", ventasgeneradas);
+app.use("/selectnombre", rutaSelecttrabajador);
+app.use("/proveedores", NombreProveedor);
+app.use("/selectid", rutaIdSelect);
+app.use("/facturas", rutaFacturas);
+app.use("/pago", rutaPago);
+// app.use("/recuperar_contrasena", recuperar_contrasena);
 
 const PORT = process.env.PORT || 3000;
 

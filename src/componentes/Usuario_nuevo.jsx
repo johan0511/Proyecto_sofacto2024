@@ -1,10 +1,10 @@
 import logoempresa from "../img/logoempresa.png";
 import { Button } from "@nextui-org/button";
 import Avat from "../../components/Avatar";
-import App from "../../components/TablaProductos/TabVenta";
+import App from "../../components/TablaProductos/TabUsuario";
 import { Link } from "react-router-dom";
 
-const Informe_venta = () => {
+const Usuarionuevo = () => {
   return (
     <>
       <div className="nav">
@@ -39,4 +39,4 @@ const Informe_venta = () => {
   );
 };
 
-export default Informe_venta;
+export default Usuarionuevo;

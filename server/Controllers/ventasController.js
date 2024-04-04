@@ -1,71 +1,66 @@
 const db = require("../Models/database").promise();
 
-const obtenerVentas = async (req, res) => {
+const obtenerDetallesFactura = async (req, res) => {
   try {
-    const [result] = await db.query("SELECT * FROM Ventas");
+    const [result] = await db.query("SELECT * FROM detallesfactura");
     res.json(result);
   } catch (error) {
     console.log(`Error: ${error}`);
-    res.status(500).json({ error: "Error al obtener ventas." });
+    res
+      .status(500)
+      .json({ error: "Error al obtener los detalles de la factura." });
   }
 };
 
-const obtenerVentaPorId = async (req, res) => {
+const obtenerDetalleFacturaPorNumeroFactura = async (req, res) => {
   try {
-    const { id } = req.params;
-    const [result] = await db.query("SELECT * FROM Ventas WHERE Idventas = ?", [
-      id,
-    ]);
-    res.json(result[0] || {});
-  } catch (error) {
-    console.log(`Error: ${error}`);
-    res.status(500).json({ error: "Error al obtener la venta." });
-  }
-};
-
-const crearVenta = async (req, res) => {
-  try {
-    const { body } = req;
+    const { numeroFactura } = req.params;
     const [result] = await db.query(
-      "INSERT INTO Ventas (Producto, Fecha, cantidad, Precio, Total) VALUES (?, ?, ?, ?, ?)",
-      [body.Producto, body.Fecha, body.cantidad, body.Precio, body.Total]
+      "SELECT * FROM detallesfactura WHERE numeroFactura = ?",
+      [numeroFactura]
     );
-    res.json({ message: "Venta creada correctamente", id: result.insertId });
+    res.json(result || []);
   } catch (error) {
     console.log(`Error: ${error}`);
-    res.status(500).json({ error: "Error al crear la venta." });
+    res
+      .status(500)
+      .json({ error: "Error al obtener el detalle de la factura." });
   }
 };
 
-const actualizarVenta = async (req, res) => {
+const obtenerVentasPorFecha = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { body } = req;
-    delete body.Idventas;
-
-    await db.query("UPDATE Ventas SET ? WHERE Idventas = ?", [body, id]);
-    res.json({ message: "Venta actualizada correctamente" });
+    const { fecha } = req.params;
+    const [result] = await db.query(
+      "SELECT * FROM detallesfactura WHERE DATE(fecha) = ?",
+      [fecha]
+    );
+    res.json(result || []);
   } catch (error) {
     console.log(`Error: ${error}`);
-    res.status(500).json({ error: "Error al actualizar la venta." });
+    res.status(500).json({ error: "Error al obtener las ventas por fecha." });
   }
 };
 
-const eliminarVenta = async (req, res) => {
+const obtenerVentasPorRangoFechas = async (req, res) => {
   try {
-    const { id } = req.params;
-    await db.query("DELETE FROM Ventas WHERE Idventas = ?", [id]);
-    res.json({ message: "Venta eliminada correctamente" });
+    const { fechaInicial, fechaFinal } = req.params;
+    const [result] = await db.query(
+      "SELECT * FROM detallesfactura WHERE DATE(fecha) BETWEEN ? AND ?",
+      [fechaInicial, fechaFinal]
+    );
+    res.json(result || []);
   } catch (error) {
     console.log(`Error: ${error}`);
-    res.status(500).json({ error: "Error al eliminar la venta." });
+    res
+      .status(500)
+      .json({ error: "Error al obtener las ventas por rango de fechas." });
   }
 };
 
 module.exports = {
-  obtenerVentas,
-  obtenerVentaPorId,
-  crearVenta,
-  actualizarVenta,
-  eliminarVenta,
+  obtenerDetallesFactura,
+  obtenerDetalleFacturaPorNumeroFactura,
+  obtenerVentasPorFecha,
+  obtenerVentasPorRangoFechas,
 };

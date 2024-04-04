@@ -20,14 +20,9 @@ const Empleados = () => {
             Inventario
           </Button>
         </Link>
-        <Link to="/">
+        <Link to="/venta">
           <Button className="BtnN" color="success" variant="shadow">
             Registro Ventas
-          </Button>
-        </Link>
-        <Link to="/">
-          <Button className="BtnN" color="success" variant="shadow">
-            Informe Ventas
           </Button>
         </Link>
         <div className="Avat">

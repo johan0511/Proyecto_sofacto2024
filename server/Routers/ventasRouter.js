@@ -1,11 +1,16 @@
 const express = require("express");
-const ventaController = require("../Controllers/ventasController"); 
-const rutaVentas = express.Router(); 
+const ventaController = require("../Controllers/ventasController");
+const rutaVentas = express.Router();
 
-rutaVentas.get("/venta", ventaController.obtenerVentas); // Ajustado el nombre de la función del controlador
-rutaVentas.get("/venta:id", ventaController.obtenerVentaPorId); // Ajustado el nombre de la función del controlador
-rutaVentas.post("/crear", ventaController.crearVenta); // Ajustado el nombre de la función del controlador
-rutaVentas.put("/actualizar/:id", ventaController.actualizarVenta); // Ajustado el nombre de la función del controlador
-rutaVentas.delete("/eliminar/:id", ventaController.eliminarVenta); // Ajustado el nombre de la función del controlador
+rutaVentas.get("/factura_vendida", ventaController.obtenerDetallesFactura);
+rutaVentas.get(
+  "/detalles-factura/:numeroFactura",
+  ventaController.obtenerDetalleFacturaPorNumeroFactura
+);
+rutaVentas.get(
+  "/ventas/:fechaInicial/:fechaFinal",
+  ventaController.obtenerVentasPorRangoFechas
+);
+rutaVentas.get("/ventas/:fecha", ventaController.obtenerVentasPorFecha);
 
 module.exports = rutaVentas;

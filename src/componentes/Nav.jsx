@@ -12,17 +12,17 @@ export const Nav = () => {
           <link to="/"></link>
           <img src={logoempresa} alt="Logo" width={100} />
           <ul className="info">
+            <Link to="/">
             <li>Inicio</li>
-            <li>Sobre nosotros</li>
+            </Link>
+            <Link to="/contacto">
             <li>Contacto</li>
-            <li>Ayuda</li>
+            </Link>
           </ul>
           <ul>
             <div className="login">
               <li>
                 <Link to="./login">Iniciar sesion</Link>
-
-                <Link to="./nuevousuario">Registrarme</Link>
               </li>
             </div>
           </ul>

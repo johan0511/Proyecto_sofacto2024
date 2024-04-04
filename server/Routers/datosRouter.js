@@ -1,11 +1,23 @@
 const express = require("express");
-const proveedorController = require("../Controllers/datosController");
-const rutaProveedores = express.Router();
+const productoController = require("../Controllers/datosController");
+const rutaProductos = express.Router();
 
-rutaProveedores.get("/", proveedorController.obtenerProveedores);
-rutaProveedores.get("/:id", proveedorController.obtenerProveedorPorId);
-rutaProveedores.post("/crear", proveedorController.crearProducto);
-rutaProveedores.put("/actualizar/:id", proveedorController.actualizarProducto);
-rutaProveedores.delete("/eliminar/:id", proveedorController.eliminarProveedor);
+rutaProductos.get("/", productoController.obtenerProductos);
+rutaProductos.get("/:id", productoController.obtenerProductoPorId);
+rutaProductos.post("/crear", productoController.crearProducto);
+rutaProductos.put(
+  "/actualizar-producto/:id",
+  productoController.actualizarProducto
+);
+rutaProductos.put("/agregar-cantidad/:id", productoController.agregarCantidad);
+rutaProductos.put("/vender-producto", productoController.venderProducto);
+rutaProductos.delete(
+  "/eliminar-producto/:id",
+  productoController.eliminarProducto
+);
+rutaProductos.post(
+  "/productos-disponibles",
+  productoController.obtenerProductosDisponibles
+);
 
-module.exports = rutaProveedores;
+module.exports = rutaProductos;

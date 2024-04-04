@@ -1,11 +1,9 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Button } from "@nextui-org/button";
 import logoempresa from "../img/logoempresa.png";
 import Fact from "../img/LogoFac.jpeg";
 import Inve from "../img/LogoInvent.jpeg";
-import Rventa from "../img/LogoResVent.jpeg";
-import InformeV from "../img/InformeV.jpg";
-import Avat from "../../components/Avatar";
+import Avat from "../../components/TablaProductos/Empleado/Avatar_empleado";
 
 const InterfazInvent = () => {
   return (
@@ -23,25 +21,22 @@ const InterfazInvent = () => {
       <br />
       <div className="QrpInv">
         <div>
-          <h2 className="h2Invet">Interfaz Administrador</h2>
+          <h2 className="h2Invet">Interfaz Empleado</h2>
+          <br />
+          <br />
+          <br />
         </div>
         <div className="ContIma">
-          <Link to="/factura">
-            <img className="ImgS" src={Fact} />
-            <h3 className="TextInv" >Factura</h3>
-          </Link>
+          <NavLink to="/factura_empleado" activeClassName="active">
+            <img className="ImgS" src={Fact} alt="Factura" />
+            <h3 className="TextInv">Factura</h3>
+          </NavLink>
         </div>
         <div className="ContIma">
-          <Link to="/inventario">
-            <img className="ImgS" src={Inve} />
+          <NavLink to="/inventario_empleado" activeClassName="active">
+            <img className="ImgS" src={Inve} alt="Inventario" />
             <h3 className="TextInv">Inventario</h3>
-          </Link>
-        </div>
-        <div className="ContIma">
-          <Link to="/infventa">
-            <img className="ImgS" src={Rventa} />
-            <h3 className="TextInv">Registro Ventas</h3>
-          </Link>
+          </NavLink>
         </div>
       </div>
     </>

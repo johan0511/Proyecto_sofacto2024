@@ -27,8 +27,8 @@ const crearEmpleado = async (req, res) => {
   try {
     const { body } = req;
     const [result] = await db.query(
-      "INSERT INTO Empleados (ID, Nombre, Nombre_cargo_FK) VALUES (?, ?, ?)",
-      [body.ID, body.Nombre, body.Nombre_cargo_FK]
+      "INSERT INTO Empleados (Nombre, Nombre_cargo_FK) VALUES (?, ?)",
+      [body.Nombre, body.Nombre_cargo_FK]
     );
     res.json({ message: "Empleado creado correctamente", id: result.insertId });
   } catch (error) {

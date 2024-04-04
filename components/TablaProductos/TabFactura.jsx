@@ -1,314 +1,234 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Button } from "@nextui-org/button";
+import Avat from "../../components/Avatar";
+import { Link } from "react-router-dom";
+import logoempresa from "../../src/img/logoempresa.png";
+import { jsPDF } from "jspdf";
 import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
-class TabFactura extends Component {
-  state = {
-    tipoId: [],
-    data: [],
-    modalInsertar: false,
-    modalEliminar: false,
-    form: {
-      IdFactura: "",
-      IdProducto_FK: "",
-      Cantidad_productos: "",
-      Precio_producto: "",
-      Total_pagar: "",
-      Fecha_venta: "",
-      IdMetodo_pago_FK: "",
-      IdCliente_FK: "",
-      tipoModal: "insertar",
-    },
-    productNames: {}, // Agregar objeto para almacenar los nombres de los productos
-  };
+function TabFac() {
+  const [numeroDocumento, setNumeroDocumento] = useState("");
+  const [nombreCliente, setNombreCliente] = useState("");
+  const [direccionCliente, setDireccionCliente] = useState("");
+  const [telefonoCliente, setTelefonoCliente] = useState("");
+  const [productos, setProductos] = useState([]);
+  const [nombreProducto, setNombreProducto] = useState("");
+  const [precioProducto, setPrecioProducto] = useState("");
+  const [cantidadProducto, setCantidadProducto] = useState("");
+  const [subtotalProductos, setSubtotalProductos] = useState(0);
 
-  pGetSelect = () => {
-    axios
-      .get("http://localhost:3000/id/Cle")
-      .then((res) => {
-        if (Array.isArray(res.data)) {
-          this.setState({ tipoId: res.data });
-        } else if (res.data && Object.keys(res.data).length === 0) {
-          console.error("La respuesta está vacía.");
-        } else {
-          console.error("La respuesta no es un array:", res.data);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const agregarProducto = () => {
+    if (nombreProducto && precioProducto && cantidadProducto) {
+      const precio = parseFloat(precioProducto);
+      const cantidad = parseInt(cantidadProducto);
+      const subtotalProducto = precio * cantidad;
 
-  peticionGet = () => {
-    axios
-      .get("http://localhost:3000/fact/F")
-      .then((response) => {
-        const productNames = {};
-        response.data.forEach((factura) => {
-          productNames[factura.IdProducto_FK] = factura.NombreProducto;
-        });
-        this.setState({
-          data: response.data,
-          productNames: productNames,
-        });
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  };
+      setProductos([
+        ...productos,
+        { nombre: nombreProducto, precio, cantidad },
+      ]);
+      setSubtotalProductos(subtotalProductos + subtotalProducto);
 
-  peticionPost = async () => {
-    const { form } = this.state;
-    try {
-      delete form.IdFactura;
-      const response = await axios.post(
-        "http://localhost:3000/fact/crear",
-        form
-      );
-      console.log(response.data);
-      this.modalInsertar();
-      this.peticionGet();
-    } catch (error) {
-      console.log(error.message);
+      // Limpia campos después de agregar el producto
+      setNombreProducto("");
+      setPrecioProducto("");
+      setCantidadProducto("");
     }
   };
 
-  peticionPut = async () => {
-    const { form } = this.state;
-    const { IdFactura, ...rest } = form;
-    await axios
-      .put(`http://localhost:3000/fact/actualizar/${IdFactura}`, rest)
+  const obtenerNombreCliente = () => {
+    if (numeroDocumento) {
+      axios
+        .get(`http://localhost:3000/Cargos/${Id}`)
+        .then((response) => {
+          const cliente = response.data;
+          setNombreCliente(cliente.nombre);
+        })
+        .catch((error) => {
+          console.error("Error al obtener el nombre del cliente:", error);
+        });
+    }
+  };
+
+  const generarFacturaPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text("Factura", 10, 10);
+
+    const fechaActual = new Date();
+    const fechaString = fechaActual.toLocaleDateString();
+    const horaString = fechaActual.toLocaleTimeString();
+
+    doc.setFontSize(12);
+    doc.text("Fecha: " + fechaString + " " + horaString, 10, 20);
+    doc.text("Número de Documento: " + numeroDocumento, 10, 30);
+    doc.text("Nombre del Cliente: " + nombreCliente, 10, 40);
+    doc.text("Dirección: " + direccionCliente, 10, 50);
+    doc.text("Teléfono: " + telefonoCliente, 10, 60);
+    doc.text("Productos:", 10, 70);
+    productos.forEach((producto, index) => {
+      const y = 80 + index * 10;
+      doc.text(
+        `${index + 1}. ${producto.nombre} - Precio: ${
+          producto.precio
+        } - Cantidad: ${producto.cantidad} - Subtotal: ${
+          producto.precio * producto.cantidad
+        }`,
+        10,
+        y
+      );
+    });
+    const yTotal = 80 + productos.length * 10;
+    doc.text("Subtotal Productos: " + subtotalProductos, 10, yTotal + 10);
+    const iva = subtotalProductos * 0.19;
+    doc.text("Iva 19%: " + iva, 10, yTotal + 20);
+    const total = subtotalProductos + iva;
+    doc.setFont("helvetica", "bold");
+    doc.text("Total: " + total, 10, yTotal + 30);
+
+    // Agrega línea separadora
+    doc.setLineWidth(0.5);
+    doc.line(10, yTotal + 35, 200, yTotal + 35);
+
+    // Agrega mensaje final
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("¡Gracias por su compra!", 10, yTotal + 45);
+
+    doc.save("factura.pdf");
+
+    axios
+      .post("http://localhost:3000/fact/crear", {
+        numeroDocumento: numeroDocumento,
+        nombreCliente: nombreCliente,
+        direccionCliente: direccionCliente,
+        telefonoCliente: telefonoCliente,
+        productos: productos,
+        subtotalProductos: subtotalProductos,
+      })
       .then((response) => {
-        this.modalInsertar();
-        this.peticionGet();
+        console.log("Respuesta de la API:", response.data);
+        console.log("Factura enviada exitosamente a la API");
       })
       .catch((error) => {
-        console.log(error.message);
+        console.error("Error al enviar factura a la API:", error);
       });
   };
 
-  peticionDelete = async () => {
-    const { form } = this.state;
-    await axios
-      .delete(`http://localhost:3000/fact/eliminar/${form.IdFactura}`)
-      .then((response) => {
-        this.setState({ modalEliminar: false });
-        this.peticionGet();
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  };
-
-  modalInsertar = () => {
-    this.setState({ modalInsertar: !this.state.modalInsertar });
-  };
-
-  seleccionarProducto = (Factura) => {
-    this.setState({
-      tipoModal: "actualizar",
-      form: {
-        ...Factura,
-        Fecha_venta: Factura.Fecha_venta ? Factura.Fecha_venta.substring(0, 10) : "",
-      },
-    });
-  };
-
-  handleChange = async (e) => {
-    e.persist();
-    await this.setState({
-      form: {
-        ...this.state.form,
-        [e.target.name]: e.target.value,
-      },
-    });
-    console.log(this.state.form);
-  };
-
-  componentDidMount() {
-    this.pGetSelect();
-    this.peticionGet();
-  }
-
-  render() {
-    const { form, tipoId, productNames } = this.state;
-    return (
-      <div className="App">
-        <br />
-        <Button
-          className="btn btn-success"
-          onClick={() => {
-            this.setState({ form: {}, tipoModal: "insertar" });
-            this.modalInsertar();
-          }}
-        >
-          Agregar Producto
-        </Button>
-        <br />
-        <br />
-        <table className="table ">
-          <thead>
-            <tr>
-              <th>PRODUCTO</th>
-              <th>DESCRIPCION</th>
-              <th>CANTIDAD</th>
-              <th>PRECIO UNITARIO</th>
-              <th>TOTAL</th>
-              <th>ACCIONES</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.data.map((Factura) => {
-              return (
-                <tr key={Factura.IdFactura}>
-                  <td>{productNames[Factura.IdProducto_FK]}</td>
-                  <td>{Factura.Cantidad_productos}</td>
-                  <td>{Factura.Precio_producto}</td>
-                  <td>{Factura.Total_pagar}</td>
-                  <td>{new Intl.NumberFormat("en-EN").format(Factura.Precio)}</td>
-                  <td>
-                    <Button
-                      className="btn btn-primary"
-                      onClick={() => {
-                        this.seleccionarProducto(Factura);
-                        this.modalInsertar();
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                    </Button>
-                    {"   "}
-                    <Button
-                      className="btn btn-danger"
-                      onClick={() => {
-                        this.seleccionarProducto(Factura);
-                        this.setState({ modalEliminar: true });
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} />
-                    </Button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-
-        <Modal isOpen={this.state.modalInsertar}>
-          <ModalHeader style={{ display: "block" }}>
-            <span
-              style={{ float: "right" }}
-              onClick={() => this.modalInsertar()}
-            >
-              x
-            </span>
-          </ModalHeader>
-          <ModalBody>
-            <div className="form-group">
-              <label htmlFor="IdFactura">ID</label>
-              <input
-                className="form-control"
-                type="text"
-                name="IdFactura"
-                id="IdFactura"
-                readOnly
-                onChange={this.handleChange}
-                value={form.IdFactura || this.state.data.length + 1}
-              />
-              <br />
-              <label htmlFor="IdProducto_FK">PRODUCTO</label>
-              <input
-                className="form-control"
-                type="text"
-                name="IdProducto_FK"
-                id="IdProducto_FK"
-                onChange={this.handleChange}
-                value={form.IdProducto_FK || ""}
-              />
-              <br />
-              <label htmlFor="Cantidad_productos">CANTIDAD DE PRODUCTOS</label>
-              <br />
-              <input
-                className="form-control"
-                type="number"
-                name="Cantidad_productos"
-                id="Cantidad_productos"
-                onChange={this.handleChange}
-                value={form.Cantidad_productos || ""}
-              />
-              <br />
-              <label htmlFor="Precio_producto">PRECIO PRODUCTO</label>
-              <input
-                className="form-control"
-                type="number"
-                name="Precio_producto"
-                id="Precio_producto"
-                onChange={this.handleChange}
-                value={form.Precio_producto || ""}
-              />
-              <br />
-              <label htmlFor="Total_pagar">TOTAL A PAGAR</label>
-              <input
-                className="form-control"
-                type="number"
-                name="Total_pagar"
-                id="Total_pagar"
-                onChange={this.handleChange}
-                value={form.Total_pagar || ""}
-              />
-              <br />
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            {this.state.tipoModal === "insertar" ? (
-              <Button
-                className="btn btn-success"
-                onClick={() => this.peticionPost()}
-              >
-                Insertar
-              </Button>
-            ) : (
-              <Button
-                className="btn btn-primary"
-                onClick={() => this.peticionPut()}
-              >
-                Actualizar
-              </Button>
-            )}
-            <Button
-              className="btn btn-danger"
-              onClick={() => this.modalInsertar()}
-            >
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </Modal>
-
-        <Modal isOpen={this.state.modalEliminar}>
-          <ModalBody>
-            Estás seguro que deseas eliminar a la empresa {form && form.IdFactura}
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              className="btn btn-danger"
-              onClick={() => this.peticionDelete()}
-            >
-              Sí
-            </Button>
-            <Button
-              className="btn btn-secondary"
-              onClick={() => this.setState({ modalEliminar: false })}
-            >
-              No
-            </Button>
-          </ModalFooter>
-        </Modal>
+  return (
+    <>
+      <div className="nav">
+        <div className="Avat">
+          <Avat />
+        </div>
       </div>
-    );
-  }
+      <br />
+      <br />
+      <br />
+      <br />
+
+      <div className="client">
+        <input
+          type="text"
+          name="numeroDocumento"
+          placeholder="Número de Documento"
+          value={Id}
+          onChange={(e) => setNumeroDocumento(e.target.value)}
+          onBlur={Id}
+        />
+        <br />
+        <br />
+        <input
+          type="text"
+          name="nombreCliente"
+          placeholder="Nombre Cliente"
+          value={nombreCliente}
+          readOnly
+        />
+        <br />
+        <br />
+        <input
+          type="text"
+          name="direccionCliente"
+          placeholder="Dirección"
+          value={direccionCliente}
+          onChange={(e) => setDireccionCliente(e.target.value)}
+        />
+        <br />
+        <br />
+        <input
+          type="text"
+          name="telefonoCliente"
+          placeholder="Teléfono"
+          value={telefonoCliente}
+          onChange={(e) => setTelefonoCliente(e.target.value)}
+        />
+        <br />
+        <br />
+      </div>
+
+      <div className="product">
+        <input
+          type="text"
+          name="nombreProducto"
+          placeholder="Nombre Producto"
+          value={nombreProducto}
+          onChange={(e) => setNombreProducto(e.target.value)}
+        />
+        <br />
+        <br />
+        <input
+          type="text"
+          name="precioProducto"
+          placeholder="Precio Producto"
+          value={precioProducto}
+          onChange={(e) => setPrecioProducto(e.target.value)}
+        />
+        <br />
+        <br />
+        <input
+          type="text"
+          name="cantidadProducto"
+          placeholder="Cantidad Producto"
+          value={cantidadProducto}
+          onChange={(e) => setCantidadProducto(e.target.value)}
+        />
+        <br />
+        <br />
+
+        <input
+          type="button"
+          name="Continuar"
+          onClick={agregarProducto}
+          value="Agregar Producto"
+        />
+        <br />
+        <br />
+      </div>
+
+      <div className="fact">
+        <input
+          type="button"
+          name="Continuar"
+          onClick={generarFacturaPDF}
+          value="Generar Factura PDF"
+        />
+        <br />
+        <br />
+        <h3>Productos:</h3>
+        <ul>
+          {productos.map((producto, index) => (
+            <li key={index}>
+              {producto.nombre} - Precio: {producto.precio} - Cantidad:{" "}
+              {producto.cantidad} - Subtotal:{" "}
+              {producto.precio * producto.cantidad}
+            </li>
+          ))}
+        </ul>
+        <p>Subtotal Productos: {subtotalProductos}</p>
+      </div>
+    </>
+  );
 }
 
-export default TabFactura;
+export default TabFac;
