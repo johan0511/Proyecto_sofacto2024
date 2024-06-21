@@ -634,72 +634,18 @@ export function Factura() {
 
         if (response.data) {
           console.log("Factura creada exitosamente:", response.data);
-          Swal.fire({
-            icon: "success",
-            title: "Factura creada exitosamente",
-            text: "La factura se ha creado correctamente",
-          }).then(() => {
-            Swal.fire({
-              title: "¿Deseas realizar otra venta?",
-              showCancelButton: true,
-              confirmButtonText: "Sí",
-              cancelButtonText: "No",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                // Refrescar la página
-                window.location.reload();
-              }
-            });
-          });
+          // Mostrar mensaje de éxito y realizar acciones adicionales si es necesario
         } else {
-          Swal.fire({
-            icon: "error",
-            title: "Error al crear la factura",
-            text: "No se pudo crear la factura. Inténtalo de nuevo.",
-          });
+          console.error("Error al crear la factura:", response);
+          // Mostrar mensaje de error
         }
-
-        // Actualizar el estado local de los productos disponibles
-        const nuevosProductosDisponibles = productosDisponibles.map(
-          (producto) => {
-            const productoVendido = productosAgregados.find(
-              (p) => p.IdProducto === producto.IdProducto
-            );
-            if (productoVendido) {
-              const nuevaCantidad =
-                parseFloat(producto.Descripcion) - productoVendido.Cantidad;
-              return {
-                ...producto,
-                Descripcion: nuevaCantidad.toString(),
-              };
-            }
-            return producto;
-          }
-        );
-        setProductosDisponibles(nuevosProductosDisponibles);
-
-        // Mostrar SweetAlert con el mensaje de inventario actualizado
-        Swal.fire({
-          icon: "success",
-          title: "Inventario actualizado",
-          text: "El inventario se ha actualizado correctamente",
-          confirmButtonText: "OK",
-          allowOutsideClick: false,
-        });
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error al actualizar el inventario",
-          text: "No se pudo actualizar el inventario. La factura no se creará.",
-        });
+        console.error("Error al actualizar el inventario");
+        // Mostrar mensaje de error
       }
     } catch (error) {
       console.error("Error al realizar la venta:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Ocurrió un error al realizar la venta. Inténtalo de nuevo.",
-      });
+      // Mostrar mensaje de error
     }
   };
 

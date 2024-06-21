@@ -17,7 +17,6 @@ const productosController = require("./Routers/IdSelectproductos");
 const rutaSelecttrabajador = require("./Routers/IdSelecttrabajador");
 const ventasgeneradas = require("./Routers/ventasRouter");
 
-
 // const recuperar_contrasena = require("./Routers/recuperarcontrasena");
 
 const app = express();
@@ -45,7 +44,7 @@ app.use("/selectnombre", rutaSelecttrabajador);
 app.use("/proveedores", NombreProveedor);
 app.use("/selectid", rutaIdSelect);
 app.use("/facturas", rutaFacturas);
-app.use("/pago", rutaPago);
+app.use("/pago", rutaPago); 
 // app.use("/recuperar_contrasena", recuperar_contrasena);
 
 const PORT = process.env.PORT || 3000;

@@ -10,10 +10,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { Pie } from "react-chartjs-2";
-import { Chart, ArcElement } from "chart.js";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-Chart.register(ArcElement);
+Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const url = "http://localhost:3000";
 
@@ -40,6 +47,11 @@ class App extends Component {
     currentPage: 1,
     productsPerPage: 6,
     searchTerm: "",
+  };
+
+  // Función para generar un color aleatorio hexadecimal
+  generateRandomColor = () => {
+    return "#" + Math.floor(Math.random() * 16777215).toString(16);
   };
 
   GetSelectP = () => {
@@ -325,7 +337,7 @@ class App extends Component {
       </li>
     ));
 
-    // Obtener los datos para la gráfica circular
+    // Obtener los datos para la gráfica de barras
     const productCounts = this.state.productosAgrupados.map(
       (producto) => producto.Cantidad
     );
@@ -333,22 +345,58 @@ class App extends Component {
       (producto) => producto.Nombre
     );
 
-    // Configurar los datos de la gráfica circular
-    const pieData = {
+    // Generar colores aleatorios para cada producto
+    const productColors = this.state.productosAgrupados.map(() =>
+      this.generateRandomColor()
+    );
+
+    // Configurar los datos de la gráfica de barras
+    const barData = {
       labels: productNames,
       datasets: [
         {
+          label: "Cantidad de productos",
           data: productCounts,
-          backgroundColor: [
-            "#FF6384",
-            "#36A2EB",
-            "#FFCE56",
-            "#4BC0C0",
-            "#9966FF",
-            "#FF9F40",
-          ],
+          backgroundColor: productColors,
+          borderColor: productColors,
+          borderWidth: 1,
         },
       ],
+    };
+
+    const barOptions = {
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+        },
+        y: {
+          beginAtZero: true,
+          grid: {
+            drawBorder: false,
+          },
+          ticks: {
+            stepSize: Math.ceil(Math.max(...productCounts) / 5),
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              const producto = this.state.productosAgrupados[context.dataIndex];
+              return `Nombre: ${producto.Nombre}
+Cantidad Agregada: ${producto.Cantidad}
+Cantidad Vendida: ${producto.CantidadVendida || 0}
+Fecha: ${producto.Fecha}`;
+            },
+          },
+        },
+      },
     };
 
     return (
@@ -444,217 +492,201 @@ class App extends Component {
             </tbody>
           </table>
           {currentProducts.map((Productos) => {
-            if (Productos.Descripcion <= 10) {
-              return (
-                <div key={Productos.IdProducto} className="alert alert-warning">
-                  <p>
-                    El producto "{Productos.Nombre}" le quedan pocas unidades,
-                    haz un nuevo pedido.
-                  </p>
-                </div>
-              );
-            }
-            return null;
-          })}
-        </div>
-        <nav aria-label="Page navigation example">
-          <ul className="pagination justify-content-center">
-            {renderPageNumbers}
-          </ul>
-        </nav>
+            if (Productos.Descripcion <= 10) {return (
+              <div key={Productos.IdProducto} className="alert alert-warning">
+                <p>
+                  El producto "{Productos.Nombre}" le quedan pocas unidades,
+                  haz un nuevo pedido.
+                </p>
+              </div>
+            );
+          }
+          return null;
+        })}
+      </div>
+      <nav aria-label="Page navigation example">
+        <ul className="pagination justify-content-center">
+          {renderPageNumbers}
+        </ul>
+      </nav>
+      <div className="chart-container">
+        <Bar data={barData} options={barOptions} />
+      </div>
 
-        {/* Tabla con la gráfica circular */}
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Porcentaje de Productos Agregados</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div style={{ width: "400px", margin: "0 auto" }}>
-                  <Pie data={pieData} />
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <Modal isOpen={this.state.modalInsertar}>
-          <ModalHeader style={{ display: "block" }}>
-            <span
-              style={{ float: "right" }}
-              onClick={() => this.modalInsertar()}
+      <Modal isOpen={this.state.modalInsertar}>
+        <ModalHeader style={{ display: "block" }}>
+          <span
+            style={{ float: "right" }}
+            onClick={() => this.modalInsertar()}
+          >
+            x
+          </span>
+        </ModalHeader>
+        <ModalBody>
+          <div className="form-group">
+            <label htmlFor="Nombre">PRODUCTO</label>
+            <input
+              className="form-control"
+              type="text"
+              name="Nombre"
+              id="Nombre"
+              onChange={this.handleChange}
+              value={form.Nombre || ""}
+            />
+            <br />
+            <select
+              onChange={this.handleChange}
+              name="Nombre_categoria_FK"
+              id="Nombre_categoria_FK"
+              className="form-control"
+              value={form.Nombre_categoria_FK || ""}
             >
-              x
-            </span>
-          </ModalHeader>
-          <ModalBody>
-            <div className="form-group">
-              <label htmlFor="Nombre">PRODUCTO</label>
-              <input
-                className="form-control"
-                type="text"
-                name="Nombre"
-                id="Nombre"
-                onChange={this.handleChange}
-                value={form.Nombre || ""}
-              />
-              <br />
-              <select
-                onChange={this.handleChange}
-                name="Nombre_categoria_FK"
-                id="Nombre_categoria_FK"
-                className="form-control"
-                value={form.Nombre_categoria_FK || ""}
-              >
-                <option value="">SELECCIONE UNA CATEGORIA</option>
-                {this.state.categoria.map((categoria) => (
-                  <option
-                    key={categoria.Id_categoria}
-                    value={categoria.Id_categoria}
-                  >
-                    {categoria.Nombre_categoria}
-                  </option>
-                ))}
-              </select>
-              <br />
-              <label htmlFor="Proveedor">PROVEEDOR</label>
-              <select
-                className="form-control"
-                name="Proveedor"
-                id="Proveedor"
-                onChange={this.handleChange}
-                value={form.Proveedor || ""}
-              >
-                <option value="">SELECCIONE UN PROVEEDOR</option>
-                {this.state.proveedores.map((proveedor) => (
-                  <option key={proveedor.IdProveedor} value={proveedor.Empresa}>
-                    {proveedor.Empresa}
-                  </option>
-                ))}
-              </select>
-              <br />
-              <label htmlFor="Descripcion">CANTIDAD</label>
-              <input
-                className="form-control"
-                type="number"
-                name="Descripcion"
-                id="Descripcion"
-                onChange={this.handleChange}
-                value={form.Descripcion || ""}
-              />
-              <br />
-              <label htmlFor="Fecha">FECHA INGRESO</label>
-              <input
-                className="form-control"
-                type="text"
-                name="Fecha"
-                id="Fecha"
-                value={form.Fecha || ""}
-                readOnly
-              />
-              <br />
-              <label htmlFor="Estado">ESTADO</label>
-              <select
-                className="form-control"
-                name="Estado"
-                id="Estado"
-                onChange={this.handleChange}
-                value={form.Estado || ""}
-                disabled
-              >
-                <option value="">{form.Estado}</option>
-              </select>
-              <br />
-              <label htmlFor="Precio">PRECIO</label>
-              <input
-                className="form-control"
-                type="number"
-                name="Precio"
-                id="Precio"
-                onChange={this.handleChange}
-                value={form.Precio || ""}
-              />
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            {form.IdProducto ? (
-              <Button
-                className="btn btn-primary"
-                onClick={() => this.peticionPut()}
-              >
-                Actualizar
-              </Button>
-            ) : (
-              <Button
-                className="btn btn-success"
-                onClick={() => this.peticionPost()}
-              >
-                Insertar
-              </Button>
-            )}
+              <option value="">SELECCIONE UNA CATEGORIA</option>
+              {this.state.categoria.map((categoria) => (
+                <option
+                  key={categoria.Id_categoria}
+                  value={categoria.Id_categoria}
+                >
+                  {categoria.Nombre_categoria}
+                </option>
+              ))}
+            </select>
+            <br />
+            <label htmlFor="Proveedor">PROVEEDOR</label>
+            <select
+              className="form-control"
+              name="Proveedor"
+              id="Proveedor"
+              onChange={this.handleChange}
+              value={form.Proveedor || ""}
+            >
+              <option value="">SELECCIONE UN PROVEEDOR</option>
+              {this.state.proveedores.map((proveedor) => (
+                <option key={proveedor.IdProveedor} value={proveedor.Empresa}>
+                  {proveedor.Empresa}
+                </option>
+              ))}
+            </select>
+            <br />
+            <label htmlFor="Descripcion">CANTIDAD</label>
+            <input
+              className="form-control"
+              type="number"
+              name="Descripcion"
+              id="Descripcion"
+              onChange={this.handleChange}
+              value={form.Descripcion || ""}
+            />
+            <br />
+            <label htmlFor="Fecha">FECHA INGRESO</label>
+            <input
+              className="form-control"
+              type="text"
+              name="Fecha"
+              id="Fecha"
+              value={form.Fecha || ""}
+              readOnly
+            />
+            <br />
+            <label htmlFor="Estado">ESTADO</label>
+            <select
+              className="form-control"
+              name="Estado"
+              id="Estado"
+              onChange={this.handleChange}
+              value={form.Estado || ""}
+              disabled
+            >
+              <option value="">{form.Estado}</option>
+            </select>
+            <br />
+            <label htmlFor="Precio">PRECIO</label>
+            <input
+              className="form-control"
+              type="number"
+              name="Precio"
+              id="Precio"
+              onChange={this.handleChange}
+              value={form.Precio || ""}
+            />
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          {form.IdProducto ? (
             <Button
-              className="btn btn-danger"
-              onClick={() => this.modalInsertar()}
+              className="btn btn-primary"
+              onClick={() => this.peticionPut()}
             >
-              Cancelar
+              Actualizar
             </Button>
-          </ModalFooter>
-        </Modal>
-        <Modal isOpen={this.state.modalEliminar}>
-          <ModalBody>
-            Estás seguro que deseas eliminar el producto {form && form.Nombre}
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              className="btn btn-danger"
-              onClick={() => this.peticionDelete()}
-            >
-              Sí
-            </Button>
-            <Button
-              className="btn btn-secondary"
-              onClick={() => this.setState({ modalEliminar: false })}
-            >
-              No
-            </Button>
-          </ModalFooter>
-        </Modal>
-
-        <Modal isOpen={this.state.modalAgregarCantidad}>
-          <ModalBody>
-            <div className="form-group">
-              <label htmlFor="cantidadAgregar">Cantidad a agregar:</label>
-              <input
-                className="form-control"
-                type="number"
-                name="cantidadAgregar"
-                id="cantidadAgregar"
-                onChange={this.handleChange}
-                value={form.cantidadAgregar || ""}
-              />
-            </div>
-          </ModalBody>
-          <ModalFooter>
+          ) : (
             <Button
               className="btn btn-success"
-              onClick={() => this.agregarCantidad()}
+              onClick={() => this.peticionPost()}
             >
-              Agregar
+              Insertar
             </Button>
-            <Button
-              className="btn btn-secondary"
-              onClick={() => this.setState({ modalAgregarCantidad: false })}
-            >
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </Modal>
-      </div>
-    );
-  }
+          )}
+          <Button
+            className="btn btn-danger"
+            onClick={() => this.modalInsertar()}
+          >
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
+      <Modal isOpen={this.state.modalEliminar}>
+        <ModalBody>
+          Estás seguro que deseas eliminar el producto {form && form.Nombre}
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            className="btn btn-danger"
+            onClick={() => this.peticionDelete()}
+          >
+            Sí
+          </Button>
+          <Button
+            className="btn btn-secondary"
+            onClick={() => this.setState({ modalEliminar: false })}
+          >
+            No
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      <Modal isOpen={this.state.modalAgregarCantidad}>
+        <ModalBody>
+          <div className="form-group">
+            <label htmlFor="cantidadAgregar">Cantidad a agregar:</label>
+            <input
+              className="form-control"
+              type="number"
+              name="cantidadAgregar"
+              id="cantidadAgregar"
+              onChange={this.handleChange}
+              value={form.cantidadAgregar || ""}
+            />
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            className="btn btn-success"
+            onClick={() => this.agregarCantidad()}
+          >
+            Agregar
+          </Button>
+          <Button
+            className="btn btn-secondary"
+            onClick={() => this.setState({ modalAgregarCantidad: false })}
+          >
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
+    </div>
+  );
+}
 }
 
 export default App;

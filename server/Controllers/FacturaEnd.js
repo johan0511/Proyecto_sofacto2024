@@ -29,10 +29,10 @@ const crearFactura = async (req, res) => {
       paisCliente,
       telefonoCliente,
       emailCliente,
-      numeroFactura,
+      numeroFactura, // Aquí se encuentra el número de factura
       fechaFactura,
       metodoPago,
-      nombreEmpleado,
+      nombreEmpleado, // Nombre del empleado
       subtotal,
       iva,
       total,
@@ -45,7 +45,7 @@ const crearFactura = async (req, res) => {
     await connection
       .promise()
       .query(
-        "INSERT INTO Facturas (idCliente, nombreCliente, direccionCliente, ciudadCliente, paisCliente, telefonoCliente, emailCliente, numeroFactura, fechaFactura, metodoPago, nombreEmpleado, subtotal, iva, total, dineroRecibido, cambio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO facturas (idCliente, nombreCliente, direccionCliente, ciudadCliente, paisCliente, telefonoCliente, emailCliente, numeroFactura, fechaFactura, metodoPago, nombreEmpleado, subtotal, iva, total, dineroRecibido, cambio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           idCliente,
           nombreCliente,
@@ -66,6 +66,9 @@ const crearFactura = async (req, res) => {
         ]
       );
 
+    // Obtener el número de factura recién creada
+    const facturaId = numeroFactura;
+
     // Insertar datos en la tabla DetallesFactura
     for (const detalle of detallesFactura) {
       await connection
@@ -73,9 +76,9 @@ const crearFactura = async (req, res) => {
         .query(
           "INSERT INTO DetallesFactura (numeroFactura, descripcion, nombreEmpleado, cantidad, precio, total, fecha) VALUES (?, ?, ?, ?, ?, ?, ?)",
           [
-            numeroFactura,
+            facturaId,
             detalle.descripcion,
-            nombreEmpleado,
+            nombreEmpleado, // Se agrega el nombre del empleado aquí
             detalle.cantidad,
             detalle.precio,
             detalle.total,
@@ -84,7 +87,10 @@ const crearFactura = async (req, res) => {
         );
     }
 
-    res.json({ message: "Factura creada exitosamente." });
+    res.json({
+      numeroFactura: facturaId,
+      message: "Factura creada exitosamente.",
+    });
   } catch (error) {
     console.error("Error al crear la factura:", error);
     res.status(500).json({ error: "Error al crear la factura." });
