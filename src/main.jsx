@@ -20,6 +20,7 @@ import Generar_venta from "./componentes/Registro_venta.jsx";
 import Ayuda from "./componentes/ayuda.jsx";
 import ProtectedRoute from "../components/utils/ProtectedRoute.jsx";
 import { useLocalStorage } from "react-use";
+import { useSomeHook } from "react-use";
 
 function App() {
   const [user, setUser] = useLocalStorage("user");
